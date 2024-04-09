@@ -1,4 +1,4 @@
-﻿#if UNITY_2019_4_OR_NEWER
+#if UNITY_2019_4_OR_NEWER
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -138,8 +138,11 @@ namespace YooAsset.Editor
 				var importBtn = root.Q<Button>("ImportButton");
 				importBtn.clicked += ImportBtn_clicked;
 
-				// 配置保存按钮
-				_saveButton = root.Q<Button>("SaveButton");
+                var importCSVBtn = root.Q<Button>("ImportCSVButton");
+                importCSVBtn.clicked += ImportBtn_clicked;
+
+                // 配置保存按钮
+                _saveButton = root.Q<Button>("SaveButton");
 				_saveButton.clicked += SaveBtn_clicked;
 
 				// 包裹容器
@@ -390,7 +393,13 @@ namespace YooAsset.Editor
 				RefreshWindow();
 			}
 		}
-		private void SaveBtn_clicked()
+
+        private void ImportCSVBtn_clicked()
+        {
+            ExtImportRule.ImportCsvConfig("data/CsvResRelation.csv");
+            RefreshWindow();
+        }
+        private void SaveBtn_clicked()
 		{
 			AssetBundleCollectorSettingData.SaveFile();
 		}

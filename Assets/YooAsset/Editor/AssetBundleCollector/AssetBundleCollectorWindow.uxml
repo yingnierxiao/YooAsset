@@ -4,6 +4,7 @@
         <ui:Button text="导出" display-tooltip-when-elided="true" name="ExportButton" style="width: 50px; background-color: rgb(56, 147, 58);" />
         <ui:Button text="导入" display-tooltip-when-elided="true" name="ImportButton" style="width: 50px; background-color: rgb(56, 147, 58);" />
         <ui:Button text="修复" display-tooltip-when-elided="true" name="FixButton" style="width: 50px; background-color: rgb(56, 147, 58);" />
+        <ui:Button text="导入CSV" display-tooltip-when-elided="true" name="ImportCsvButton" style="width: 50px; background-color: rgb(56, 147, 58);" />
     </uie:Toolbar>
     <ui:VisualElement name="PublicContainer" style="background-color: rgb(79, 79, 79); flex-direction: column; border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;">
         <ui:VisualElement name="HelpBoxContainer" style="flex-grow: 1;" />

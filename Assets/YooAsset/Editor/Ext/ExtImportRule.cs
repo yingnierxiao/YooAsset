@@ -60,10 +60,7 @@ namespace YooAsset.Editor
                         {
                             var resPath = read.GetFieldString(fkey);
 
-                            if (resPath.StartsWith("assets/"))
-                            {
-                                resPath = "A" + resPath.Substring(1);
-                            }
+                         
 
                             if (string.IsNullOrEmpty(resPath) || !File.Exists(resPath) || exclude.Contains(resPath))
                             {
@@ -87,11 +84,11 @@ namespace YooAsset.Editor
                                 collector.PackRuleName = "PackSeparatelyExt";
                             }
 
-                            collector.FilterRuleName = "CollectCustom";
+                            collector.FilterRuleName = "CollectCustomExt";
 
                             if (!resPath.Contains("|"))
                             {
-                                collector.UserData = Path.GetExtension(resPath);
+                                collector.UserData = Path.GetExtension(collector.CollectPath);
                             }
 
                             collector.AssetTags = "";

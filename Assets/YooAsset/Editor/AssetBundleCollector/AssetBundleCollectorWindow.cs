@@ -139,7 +139,7 @@ namespace YooAsset.Editor
 				importBtn.clicked += ImportBtn_clicked;
 
                 var importCSVBtn = root.Q<Button>("ImportCSVButton");
-                importCSVBtn.clicked += ImportBtn_clicked;
+                importCSVBtn.clicked += ImportCSVBtn_clicked;
 
                 // 配置保存按钮
                 _saveButton = root.Q<Button>("SaveButton");

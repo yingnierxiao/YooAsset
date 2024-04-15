@@ -1,4 +1,4 @@
-﻿
+
 namespace YooAsset.Editor
 {
 	public struct PackRuleData
@@ -36,9 +36,9 @@ namespace YooAsset.Editor
 		public string GetMainBundleName(string packageName, bool uniqueBundleName)
 		{
 			string fullName;
-			string bundleName = EditorTools.GetRegularPath(_bundleName).Replace('/', '_').Replace('.', '_').Replace(" ", "_").ToLower();
+			string bundleName = EditorTools.GetRegularPath(_bundleName).Replace(" ", "_").ToLower();
 			if (uniqueBundleName)
-				fullName = $"{packageName}_{bundleName}.{_bundleExtension}";
+				fullName = $"{packageName}/{bundleName}.{_bundleExtension}";
 			else
 				fullName = $"{bundleName}.{_bundleExtension}";
 			return fullName.ToLower();
@@ -54,11 +54,11 @@ namespace YooAsset.Editor
 				return string.Empty;
 
 			string fullName;
-			string bundleName = EditorTools.GetRegularPath(_bundleName).Replace('/', '_').Replace('.', '_').Replace(" ", "_").ToLower();
+			string bundleName = EditorTools.GetRegularPath(_bundleName).Replace(" ", "_").ToLower();
 			if (uniqueBundleName)
-				fullName = $"{packageName}_share_{bundleName}.{_bundleExtension}";
+				fullName = $"{packageName}/{bundleName}_share.{_bundleExtension}";
 			else
-				fullName = $"share_{bundleName}.{_bundleExtension}";
+				fullName = $"{bundleName}_share.{_bundleExtension}";
 			return fullName.ToLower();
 		}
 	}

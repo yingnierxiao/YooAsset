@@ -32,7 +32,7 @@ namespace YooAsset.Editor
             {
                 package.Groups.RemoveAt(package.Groups.Count - 1);
             }
-            /*
+            
             try
             {
                 for (int i = 0; i < csvRead.Count; i++)
@@ -106,7 +106,7 @@ namespace YooAsset.Editor
             {
 
             }
-            */
+            
 
             // 检测配置错误
             foreach (var packaget in packages)

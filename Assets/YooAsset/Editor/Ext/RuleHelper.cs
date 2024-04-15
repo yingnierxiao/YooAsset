@@ -20,7 +20,7 @@ namespace YooAsset.Editor
             if (string.IsNullOrWhiteSpace(regex) || string.IsNullOrWhiteSpace(name))
                 return null;
 
-            var cleanedName = name.Trim().Replace('/', '-').Replace('\\', '-');
+            var cleanedName = name.Trim();
 
             // Parse path elements.
             var replacement = RuleImportRegex.ParsePath(assetPath, cleanedName);

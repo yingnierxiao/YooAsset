@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using UnityEditor;
+using BehaviorDesigner.Runtime.Tasks.Basic.UnityNavMeshAgent;
+using UnityEngine;
 
 namespace YooAsset.Editor
 {
@@ -11,9 +13,13 @@ namespace YooAsset.Editor
     public class ExtImportRule
     {
 
+        static string[] LanFix = new string[] {"cn","en","tw" };
+
+        static HashSet<string> RawExtHash = new HashSet<string>() { ".data", ".bnk", ".wem" };
+
         public static void ImportCsvConfig(string filePath)
         {
-            var csvRead = new CsvReader(filePath, true);
+            var csvRead = new CsvReader(filePath, true,true);
 
 
             List<AssetBundleCollectorPackage> packages = AssetBundleCollectorSettingData.Setting.Packages;// new List<AssetBundleCollectorPackage>();
@@ -26,18 +32,21 @@ namespace YooAsset.Editor
             {
                 package.Groups.RemoveAt(package.Groups.Count - 1);
             }
-
+            /*
             try
             {
                 for (int i = 0; i < csvRead.Count; i++)
                 {
                     csvRead.Read();
 
-
-
                     var filename = csvRead.GetFieldString("file");
                     var key = csvRead.GetFieldString("field");
                     var keys = key.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (filename.StartsWith("/"))
+                    {
+                        filename = filename.Substring(1);
+                    }
 
                     var read = new CsvReader(filename, true);
 
@@ -59,40 +68,35 @@ namespace YooAsset.Editor
                         foreach (var fkey in keys)
                         {
                             var resPath = read.GetFieldString(fkey);
+                            var isDir = !resPath.Contains(".");
 
-                         
-
-                            if (string.IsNullOrEmpty(resPath) || !File.Exists(resPath) || exclude.Contains(resPath))
+                            if (string.IsNullOrEmpty(resPath) || exclude.Contains(resPath))
                             {
                                 continue;
                             }
-
-                            exclude.Add(resPath);
-
-                            AssetBundleCollector collector = new AssetBundleCollector();
-                            collector.CollectorGUID = AssetDatabase.GUIDFromAssetPath(resPath).ToString();
-                            collector.CollectPath = AssetDatabase.GUIDToAssetPath(collector.CollectorGUID);
-                            collector.CollectorType = ECollectorType.MainAssetCollector;
-                            collector.AddressRuleName = "AddressByFileName";
-
-                            if (resPath.EndsWith(".data"))
+                            if (resPath.Contains("{0}"))
                             {
-                                collector.PackRuleName = "PackRawFile";
+                                foreach (var item in LanFix)
+                                {
+                                    string newPath = string.Format(resPath, item);
+                                    AddRulePath(newPath, ref group, ref exclude);
+                                }
                             }
-                            else
+                            else if (resPath.Contains("bnk")||resPath.Contains("wem"))
                             {
-                                collector.PackRuleName = "PackSeparatelyExt";
+                                string[] arr = resPath.Split('|');
+
+                                //foreach (var item in arr) {
+                                //    string fullPath = $"data/assets/gameres/Audio/GeneratedSoundBanks/android/{item}";
+                                //    AddRulePath(fullPath, ref group, ref exclude);
+                                //}
                             }
-
-                            collector.FilterRuleName = "CollectCustomExt";
-
-                            if (!resPath.Contains("|"))
+                            else 
                             {
-                                collector.UserData = Path.GetExtension(collector.CollectPath);
+                                AddRulePath(resPath, ref group, ref exclude,isDir);
                             }
-
-                            collector.AssetTags = "";
-                            group.Collectors.Add(collector);
+                            
+                            
                         }
                     }
                     read.Close();
@@ -102,6 +106,7 @@ namespace YooAsset.Editor
             {
 
             }
+            */
 
             // 检测配置错误
             foreach (var packaget in packages)
@@ -112,6 +117,55 @@ namespace YooAsset.Editor
             AssetBundleCollectorSettingData.SaveFile();
         }
 
+        public static void AddRulePath(string resPath,ref AssetBundleCollectorGroup group,ref HashSet<string> exclude,bool isDir=false) {
+            
+            if(!isDir && !File.Exists(resPath)) {
+                Debug.Log($"文件不存在{resPath}");
+                return; 
+            }
+                
+            
+            exclude.Add(resPath);
+
+            AssetBundleCollector collector = new AssetBundleCollector();
+            collector.CollectorGUID = AssetDatabase.GUIDFromAssetPath(resPath).ToString();
+            collector.CollectPath = AssetDatabase.GUIDToAssetPath(collector.CollectorGUID);
+            collector.CollectorType = ECollectorType.MainAssetCollector;
+            collector.AddressRuleName = "AddressByFileName";
+
+            string ext = Path.GetExtension(resPath);
+
+            if (isDir)
+            {
+                //目录收集
+                collector.PackRuleName = "PackCollector";
+                collector.FilterRuleName = "CollectAll";
+            }
+            else {
+                //文件收集
+                if (RawExtHash.Contains(ext))
+                {
+                    collector.PackRuleName = "PackRawFile";
+                }
+                else
+                {
+                    collector.PackRuleName = "PackSeparatelyExt";
+                }
+
+                collector.FilterRuleName = "CollectCustomExt";
+                collector.UserData = Path.GetExtension(collector.CollectPath);
+                
+            }
+          
+
+            collector.AssetTags = "";
+            group.Collectors.Add(collector);
+
+        }
+
     }
+
+
+
 
 }

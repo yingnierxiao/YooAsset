@@ -55,7 +55,7 @@ namespace YooAsset
         }
 
 
-        public CsvReader(string csvPath, bool bTrimFields = true, bool isReload = false)
+        public CsvReader(string csvPath, bool bTrimFields = true, bool isNotThreeRow = false)
         {
             string fullPath = string.Empty;
             TrimFields = bTrimFields;
@@ -108,6 +108,11 @@ namespace YooAsset
                 mapFieldIndex.Add(name, i);
             }
             //第三行注释
+
+            if (isNotThreeRow) {
+                count = count + 1;
+                return;
+            }
             Read();
             comments = new List<string>(FieldsCount);
             for (int i = 0; i < FieldsCount; i++)
@@ -140,7 +145,8 @@ namespace YooAsset
         {
             if (!mapFieldIndex.ContainsKey(strFieldName))
             {
-                Debug.LogError($"csv notf find cell name {strFieldName}");
+                Debug.LogError($"csv not find cell name {strFieldName}");
+                return string.Empty;
             }
             string s = this[mapFieldIndex[strFieldName]];
             if ((s == "null" || s == "0") && isNeckCheck)
@@ -645,7 +651,7 @@ namespace YooAsset
             if (fields == null)
             {
                 fields = new List<Field>();
-                mapFieldIndex = new Dictionary<string, int>();
+                mapFieldIndex = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
                 typeNames = new List<string>();
                 fieldsCount = 0;
             }

@@ -325,7 +325,7 @@ namespace YooAsset.Editor
 			{
 				// 获取其它资源打包规则结果
 				IPackRule packRuleInstance = AssetBundleCollectorSettingData.GetPackRuleInstance(PackRuleName);
-				PackRuleResult packRuleResult = packRuleInstance.GetPackRuleResult(new PackRuleData(assetPath, CollectPath, group.GroupName, UserData));
+				PackRuleResult packRuleResult = packRuleInstance.GetPackRuleResult(new PackRuleData(assetPath, CollectPath, group.GroupName, UserData, AssetTags));
 				return packRuleResult.GetMainBundleName(command.PackageName, command.UniqueBundleName);
 			}
 		}
